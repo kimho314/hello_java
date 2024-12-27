@@ -6,5 +6,9 @@ public class ImmutableMyDateMain {
         ImmutableMyDate date2 = date1;
         System.out.println("date1 = " + date1);
         System.out.println("date2 = " + date2);
+
+        ImmutableMyDate immutableMyDate = date2.withYear(2021);
+        System.out.println("date1 = " + date1);
+        System.out.println("date2 = " + immutableMyDate);
     }
 }

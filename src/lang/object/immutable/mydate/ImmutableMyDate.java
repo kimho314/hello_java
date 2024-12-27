@@ -31,4 +31,8 @@ public class ImmutableMyDate {
                 ", day=" + day +
                 '}';
     }
+
+    public ImmutableMyDate withYear(int newYear) {
+        return new ImmutableMyDate(newYear, this.month, this.day);
+    }
 }
