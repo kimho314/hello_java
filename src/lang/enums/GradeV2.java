@@ -3,7 +3,8 @@ package lang.enums;
 public enum GradeV2 {
     BASIC(10),
     GOLD(20),
-    DIAMOND(30);
+    DIAMOND(30),
+    VIP(40);
 
     private final int discountPercent;
 
@@ -13,5 +14,9 @@ public enum GradeV2 {
 
     public int getDiscountPercent() {
         return discountPercent;
+    }
+
+    public int discount(int price) {
+        return price * discountPercent / 100;
     }
 }
