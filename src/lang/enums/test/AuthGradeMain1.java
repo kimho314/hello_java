@@ -2,7 +2,7 @@ package lang.enums.test;
 
 import java.util.Arrays;
 
-public class AuthGradeMain {
+public class AuthGradeMain1 {
 
     public static void main(String[] args) {
         Arrays.stream(AuthGrade.values())
