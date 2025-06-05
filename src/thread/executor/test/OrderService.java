@@ -3,7 +3,6 @@ package thread.executor.test;
 import static util.MyLogger.log;
 import static util.ThreadUtils.sleep;
 
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -13,39 +12,36 @@ import java.util.concurrent.Future;
 public class OrderService {
 
     public void order(String orderNo) {
-        InventoryWork inventoryWork = new InventoryWork(orderNo);
-        ShippingWork shippingWork = new ShippingWork(orderNo);
-        AccountingWork accountingWork = new AccountingWork(orderNo);
+        try (ExecutorService executorService = Executors.newFixedThreadPool(3);) {
+            InventoryWork inventoryWork = new InventoryWork(orderNo);
+            ShippingWork shippingWork = new ShippingWork(orderNo);
+            AccountingWork accountingWork = new AccountingWork(orderNo);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(3);
-        List<Future<Boolean>> futures = null;
-        try {
-            futures = executorService.invokeAll(List.of(inventoryWork, shippingWork, accountingWork));
-            // 작업 요청
-            boolean result = true;
-            for (Future<Boolean> future : futures) {
-                try {
-                    Boolean tmpResult = future.get();
-                    if (!tmpResult) {
-                        result = false;
-                        break;
-                    }
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                    result = false;
-                    break;
-                }
+            Future<Boolean> future1 = executorService.submit(inventoryWork);
+            Future<Boolean> future2 = executorService.submit(shippingWork);
+            Future<Boolean> future3 = executorService.submit(accountingWork);
+
+            Boolean result1 = null;
+            Boolean result2 = null;
+            Boolean result3 = null;
+            try {
+                result1 = future1.get();
+                result2 = future2.get();
+                result3 = future3.get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
             }
 
             // 결과 확인
-            if (result) {
+            if (result1 && result2 && result3) {
                 log("모든 주문 처리가 성공적으로 완료되었습니다.");
             } else {
                 log("일부 작업이 실패했습니다.");
             }
-        } catch (InterruptedException e) {
+        } catch (IllegalArgumentException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     private static class InventoryWork implements Callable<Boolean> {
