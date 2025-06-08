@@ -5,6 +5,6 @@
 3. Time [X]
 4. Nested Class [X]
 5. Collections [X]
-6. Concurrency []
+6. Concurrency [X]
 7. Streams []
 8. reflection []
